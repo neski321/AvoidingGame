@@ -34,9 +34,9 @@ def draw_text(text, font, color, x, y):
     screen.blit(text_surface, text_rect)
 
 # Function to move enemies
-def move_enemies(enemies):
+def move_enemies(enemies, enemy_speed):
     for enemy in enemies:
-        enemy.move_ip(0, 5)
+        enemy.move_ip(0, enemy_speed)
 
 # Function to draw the player
 def draw_player(player):
@@ -149,7 +149,7 @@ def get_play_again_choice():
 # Function to display high scores in the game window
 def display_high_scores():
     screen.fill((0, 0, 0))
-    draw_text("HIGH SCORES:", title_font, WHITE, WIDTH // 2, 50)
+    draw_text("HIGH SCORES:", title_font, RED, WIDTH // 2, 50)
 
     y_position = 100
     for name, hs in high_scores:
@@ -161,16 +161,18 @@ def display_high_scores():
 
 # Function to reset game variables
 def reset_game():
-    global player, enemies, score
+    global player, enemies, score, enemy_speed
     player = pygame.Rect(WIDTH // 2 - PLAYER_SIZE // 2, HEIGHT - PLAYER_SIZE - 10, PLAYER_SIZE, PLAYER_SIZE)
     enemies = []
     score = 0
+    enemy_speed = 5  # Initial speed
 
 # Initialize game variables
 player = pygame.Rect(WIDTH // 2 - PLAYER_SIZE // 2, HEIGHT - PLAYER_SIZE - 10, PLAYER_SIZE, PLAYER_SIZE)
 enemies = []
 score = 0
 high_scores = []
+enemy_speed = 5  # Initial speed
 
 # Load high scores from file
 try:
@@ -199,8 +201,8 @@ while True:
     if random.random() < 0.02:
         enemies.append(generate_enemy())
 
-    # Move enemies
-    move_enemies(enemies)
+    # Move enemies with updated speed
+    move_enemies(enemies, enemy_speed)
 
     # Check for collisions
     for enemy in enemies:
@@ -239,6 +241,10 @@ while True:
     # Display the score at the top-left corner
     score_text = font.render(f"Score: {score}", True, WHITE)
     screen.blit(score_text, (10, 10))
+
+    # Increase enemy speed based on score
+    if score % 100 == 0:  # Increase speed every 100 points
+        enemy_speed += 1
 
     # Update the display
     pygame.display.flip()
