@@ -7,7 +7,7 @@ pygame.init()
 
 # Constants
 WIDTH, HEIGHT = 800, 600
-PLAYER_SIZE = 50
+PLAYER_SIZE = 40
 ENEMY_SIZE = 50
 FPS = 75
 
@@ -103,8 +103,8 @@ def get_player_name():
         screen.fill((0, 0, 0))
         draw_player(player)
         draw_enemies(enemies)
-        draw_text("Game Over", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
-        draw_text(f"Your final score: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
+        draw_text("Game Over!!", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
+        draw_text(f"Your final score is: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
         draw_text("Enter your name:", font, WHITE, WIDTH // 2, HEIGHT // 2)
 
         txt_surface = font.render(text, True, color)
@@ -149,7 +149,7 @@ def get_play_again_choice():
         screen.fill((0, 0, 0))
         draw_player(player)
         draw_enemies(enemies)
-        draw_text("Game Over", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
+        draw_text("Game Over!!", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
         draw_text(f"Your final score: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
         draw_text("Enter your name:", font, WHITE, WIDTH // 2, HEIGHT // 2)
 
@@ -161,6 +161,13 @@ def get_play_again_choice():
 
         pygame.display.flip()
         clock.tick(FPS)
+        
+# Function to display messages on the screen
+def display_message(message, color, y_offset):
+    text_surface = font.render(message, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (WIDTH // 2, HEIGHT // 2 + y_offset)
+    screen.blit(text_surface, text_rect)
 
 # Function to display high scores in the game window
 def display_high_scores():
@@ -214,7 +221,7 @@ while True:
         player.move_ip(5, 0)
 
     # Generate enemies
-    if random.random() < 0.02:
+    if random.random() < 0.03:
         enemies.extend(create_enemies())
 
     # Move enemies with updated speed
@@ -228,6 +235,14 @@ while True:
             # Update high score
             if score > 0:
                 player_name = get_player_name()
+
+                # Check if the name already exists in high scores
+                while any(name == player_name for name, _ in high_scores):
+                    display_message("Name already exists. Please choose a different name...", RED, 100)
+                    pygame.display.flip()
+                    pygame.time.delay(2000)  # Display the message for 2 seconds
+                    player_name = get_player_name()
+
                 high_scores.append((player_name, score))
                 high_scores.sort(key=lambda x: x[1], reverse=True)
 
