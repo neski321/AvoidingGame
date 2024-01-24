@@ -1,5 +1,5 @@
 ## Project Description:
-The project is a simple game created using the Pygame library in Python. The game, titled "Avoid the Enemies," involves a player-controlled block that must dodge falling enemy blocks to accumulate a high score. The player moves the block horizontally to avoid collisions with descending enemy blocks. The game features dynamic difficulty, as the speed of the falling enemy blocks gradually increases with the player's score.
+"Avoiding the enemies" is a fun and engaging game crafted using the Pygame library in Python. Picture yourself controlling a nimble block, navigating through a storm of falling enemy blocks. Your mission: dodge, weave, and accumulate points to prove your skills. The arrow keys are your allies, guiding your block left and right as you strive to avoid collisions with the relentless descent of enemy blocks.
 
 ## Key Features:
 
