@@ -103,8 +103,7 @@ def get_player_name():
         screen.fill((0, 0, 0))
         draw_player(player)
         draw_enemies(enemies)
-        draw_text("Game Over!!", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
-        draw_text(f"Your final score is: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
+
         draw_text("Enter your name:", font, WHITE, WIDTH // 2, HEIGHT // 2)
 
         txt_surface = font.render(text, True, color)
@@ -140,7 +139,10 @@ def get_play_again_choice():
             if event.type == pygame.KEYDOWN:
                 if active:
                     if event.key == pygame.K_RETURN:
-                        return text
+                        if text.lower() == 'y':
+                            return True
+                        elif text.lower() == 'n':
+                            return False
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
                     else:
@@ -151,7 +153,6 @@ def get_play_again_choice():
         draw_enemies(enemies)
         draw_text("Game Over!!", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
         draw_text(f"Your final score: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
-        draw_text("Enter your name:", font, WHITE, WIDTH // 2, HEIGHT // 2)
 
         txt_surface = font.render("Play again? (Y/N): " + text, True, color)
         width = max(300, txt_surface.get_width() + 10)
@@ -196,6 +197,7 @@ enemies = create_enemies()
 score = 0
 high_scores = []
 enemy_speed = 5  # Initial speed
+player_name = get_player_name()
 
 # Load high scores from file
 try:
@@ -205,6 +207,10 @@ try:
             high_scores.append((name, int(score_str)))
 except FileNotFoundError:
     pass
+
+
+# Display the player's name at the beginning
+draw_text(f"Player: {player_name}", font, WHITE, 10, 10)
 
 # Game loop
 while True:
@@ -232,9 +238,11 @@ while True:
     for enemy in enemies:
         if player.colliderect(enemy.rect):
             print("Game Over!")
+            draw_text("Game Over!!", title_font, RED, WIDTH // 2, HEIGHT // 2 - 100)
+            draw_text(f"Your final score is: {score}", font, WHITE, WIDTH // 2, HEIGHT // 2 - 50)
             # Update high score
             if score > 0:
-                player_name = get_player_name()
+                # player_name = get_player_name()
 
                 # Check if the name already exists in high scores
                 while any(name == player_name for name, _ in high_scores):
@@ -259,11 +267,12 @@ while True:
 
             # Ask if the player wants to play again
             play_again_choice = get_play_again_choice()
-            if play_again_choice.lower() == 'y':
+            if play_again_choice:
                 reset_game()
             else:
                 pygame.quit()
                 sys.exit()
+
 
     # Clear the screen
     screen.fill((0, 0, 0))
@@ -274,10 +283,16 @@ while True:
 
     # Update the score
     score += 1
+    
+    # Display the player's name
+    player_text = font.render(f"{player_name}", True, WHITE)
+    screen.blit(player_text, (10, 10))
 
-    # Display the score at the top-left corner
+  # Display the score at the top-right corner
     score_text = font.render(f"Score: {score}", True, RED)
-    screen.blit(score_text, (10, 10))
+    score_rect = score_text.get_rect()
+    score_rect.topright = (WIDTH - 20, 20)
+    screen.blit(score_text, score_rect)
 
     # Increase enemy speed based on score
     if score % 100 == 0:  # Increase speed every 100 points
