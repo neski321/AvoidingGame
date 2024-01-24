@@ -1,4 +1,4 @@
-## Project Description:
+## Overview
 
 "Avoiding the enemies" is a fun and engaging game crafted using the Pygame library in Python. Picture yourself controlling a nimble block, navigating through a storm of falling enemy blocks. Your mission: dodge, weave, and accumulate points to prove your skills. The arrow keys are your allies, guiding your block left and right as you strive to avoid collisions with the relentless descent of enemy blocks.
 
